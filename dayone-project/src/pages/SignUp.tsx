@@ -1,99 +1,101 @@
+import styled from "styled-components";
 import { useState } from "react";
-import axios from "axios";
+import { Wrapper, Title, Inputs, Input } from "../components/Common";
+import { register } from "../apis/login";
 
-function SignUp() {
-  const [email, setEmail] = useState("");
+const SignUp = () => {
+  const [id, setId] = useState("");
   const [password, setPassword] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [nickname, setNickname] = useState("");
 
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
+  const onChangeId = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setId(e.target.value);
   };
 
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
+  const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
   };
 
-  const handlePasswordConfirmChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setPasswordConfirm(event.target.value);
+  const onChangeConfirmPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setConfirmPassword(e.target.value);
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!email.trim()) {
-      alert("이메일을 입력해 주세요.");
+  const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNickname(e.target.value);
+  };
+
+  const handleSubmit = async () => {
+    if (!id) {
+      alert("아이디를 입력하세요.");
       return;
     }
 
-    if (!password.trim()) {
-      alert("비밀번호를 입력해 주세요.");
+    if (!password) {
+      alert("비밀번호를 입력하세요.");
+      return;
+    } else if (password.length < 8) {
+      alert("비밀번호는 최소 8자 이상이어야 합니다.");
       return;
     }
 
-    if (password.length < 8) {
-      alert("8자 이상 입력해 주세요.");
+    if (!confirmPassword) {
+      alert("비밀번호 확인을 입력하세요.");
       return;
-    }
-
-    if (password !== passwordConfirm) {
+    } else if (confirmPassword !== password) {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
 
-    try {
-      const API_URL = "http://localhost:5173";
-
-      const response = await axios.post(`${API_URL}/signup`, {
-        email,
-        password,
-      });
-
-      if (response.data.accessToken) {
-        localStorage.setItem("accessToken", response.data.accessToken);
-        alert("회원가입 성공! 당신의 JWT가 로컬스토리지에 저장되었습니다.");
-      } else {
-        alert("회원가입 실패. 다시 시도해 주세요.");
-      }
-    } catch (error) {
-      console.error("Error during sign-up:", error);
-      alert("회원가입 중 오류가 발생했습니다.");
+    if (!nickname) {
+      alert("닉네임을 입력하세요.");
+      return;
     }
+    const registerData = await register({ id, password, nickname });
+    alert("회원가입이 완료되었습니다!");
+    console.log(registerData);
+    console.log("Form submitted with data:", { id, password, nickname });
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="email">이메일:</label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={handleEmailChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="password">비밀번호:</label>
-        <input
+    <Wrapper>
+      <Title>회원가입</Title>
+
+      <Inputs>
+        <Input placeholder="아이디" value={id} onChange={onChangeId} />
+        <Input
           type="password"
-          id="password"
+          placeholder="비밀번호"
           value={password}
-          onChange={handlePasswordChange}
+          onChange={onChangePassword}
         />
-      </div>
-      <div>
-        <label htmlFor="passwordConfirm">비밀번호 확인:</label>
-        <input
+        <Input
           type="password"
-          id="passwordConfirm"
-          value={passwordConfirm}
-          onChange={handlePasswordConfirmChange}
+          placeholder="비밀번호 확인"
+          value={confirmPassword}
+          onChange={onChangeConfirmPassword}
         />
-      </div>
-      <button type="submit">회원가입</button>
-    </form>
+        <Input
+          name="nickname"
+          placeholder="닉네임"
+          value={nickname}
+          onChange={onChangeNickname}
+        />
+      </Inputs>
+      <Button type="button" onClick={handleSubmit}>
+        회원가입
+      </Button>
+    </Wrapper>
   );
-}
+};
+
+const Button = styled.button`
+  background-color: black;
+  cursor: pointer;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+`;
 
 export default SignUp;

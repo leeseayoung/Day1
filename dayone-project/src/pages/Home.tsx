@@ -1,21 +1,25 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { loginAPI } from "../apis/login";
+import { login } from "../apis/login";
+import { Form, Title, Wrapper, Inputs, Input } from "../components/Common";
 
 const Home = () => {
   const [id, setId] = useState("");
-  const [pw, setPw] = useState("");
-  const onChangeId = (e) => {
+  const [passwrod, setPassword] = useState("");
+  const router = useNavigate();
+  const onChangeId = (e: React.ChangeEvent<HTMLInputElement>) => {
     setId(e.target.value);
   };
-  const onChangePw = (e) => {
-    setPw(e.target.value);
+  const onChangePw = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
   };
 
-  //로그인 기능
+  // 로그인 기능
   const onClick = async () => {
-    const result = await loginAPI(id, pw);
+    const result = await login(id, passwrod);
+    localStorage.setItem("access", JSON.stringify(result));
+    router("/mypage");
   };
 
   return (
@@ -27,18 +31,16 @@ const Home = () => {
           <Input
             placeholder="비밀번호"
             type="password"
-            value={pw}
+            value={passwrod}
             onChange={onChangePw}
           />
         </Inputs>
-        <Button>Login</Button>
+        <Button onClick={onClick}>Login</Button>
       </Form>
       <CustomLink to="/signup">회원가입하기</CustomLink>
     </Wrapper>
   );
 };
-
-export default Home;
 
 const Button = styled.button`
   background-color: black;
@@ -55,70 +57,4 @@ const CustomLink = styled(Link)`
     text-decoration: none;
   }
 `;
-
-const Wrapper = styled.div`
-  padding-top: 15px;
-  display: flex;
-  align-items: center;
-  justify-items: center;
-  flex-direction: column;
-`;
-
-const Title = styled.div`
-  font-size: 30px;
-  font-weight: 700;
-  margin-bottom: 30px;
-`;
-
-const Input = styled.input`
-  font-size: 20px;
-  height: 30px;
-  border-radius: 10px;
-  border: none;
-  padding: 10px;
-  &::placeholder {
-    color: darkgray;
-    font-size: 20px;
-    font-weight: 500;
-    font-family: "OTWelcomeRA";
-  }
-`;
-
-const Inputs = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 10px;
-  margin-right: 10px;
-`;
-
-const Form = styled.div`
-  display: flex;
-  height: 100%;
-`;
-
-// import { useEffect } from "react";
-// import { Link } from "react-router-dom";
-
-// function Home() {
-//   useEffect(() => {
-//     const featchData = fetch("https://jsonplaceholder.typicode.com/todos/1")
-//       .then((response) => response.json())
-//       .then((json) => console.log(json));
-//     console.log(featchData);
-//   }, []);
-
-//   return (
-//     <>
-//       <p className="text-3xl font-bold underline">안녕하세요</p>
-//       <Link to="/signIn">
-//         <button>로그인</button>
-//       </Link>
-//       <Link to="/signUp">
-//         <button>회원가입</button>
-//       </Link>
-//     </>
-//   );
-// }
-
-// export default Home;
+export default Home;
