@@ -1,14 +1,35 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { loginAPI } from "../apis/login";
 
 const Home = () => {
+  const [id, setId] = useState("");
+  const [pw, setPw] = useState("");
+  const onChangeId = (e) => {
+    setId(e.target.value);
+  };
+  const onChangePw = (e) => {
+    setPw(e.target.value);
+  };
+
+  //로그인 기능
+  const onClick = async () => {
+    const result = await loginAPI(id, pw);
+  };
+
   return (
     <Wrapper>
       <Title>로그인하기</Title>
       <Form>
         <Inputs>
-          <Input />
-          <Input />
+          <Input placeholder="아이디" onChange={onChangeId} value={id} />
+          <Input
+            placeholder="비밀번호"
+            type="password"
+            value={pw}
+            onChange={onChangePw}
+          />
         </Inputs>
         <Button>Login</Button>
       </Form>
@@ -36,6 +57,7 @@ const CustomLink = styled(Link)`
 `;
 
 const Wrapper = styled.div`
+  padding-top: 15px;
   display: flex;
   align-items: center;
   justify-items: center;
