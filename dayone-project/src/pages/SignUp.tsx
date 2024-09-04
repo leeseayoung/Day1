@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 
 function SignUp() {
   const [email, setEmail] = useState("");
@@ -19,7 +20,7 @@ function SignUp() {
     setPasswordConfirm(event.target.value);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!email.trim()) {
       alert("이메일을 입력해 주세요.");
@@ -40,9 +41,25 @@ function SignUp() {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
-    alert(
-      `회원가입 성공! 당신의 이메일은 ${email} & 비밀번호는 ${password}입니다.`
-    );
+
+    try {
+      const API_URL = "http://localhost:5173";
+
+      const response = await axios.post(`${API_URL}/signup`, {
+        email,
+        password,
+      });
+
+      if (response.data.accessToken) {
+        localStorage.setItem("accessToken", response.data.accessToken);
+        alert("회원가입 성공! 당신의 JWT가 로컬스토리지에 저장되었습니다.");
+      } else {
+        alert("회원가입 실패. 다시 시도해 주세요.");
+      }
+    } catch (error) {
+      console.error("Error during sign-up:", error);
+      alert("회원가입 중 오류가 발생했습니다.");
+    }
   };
 
   return (
