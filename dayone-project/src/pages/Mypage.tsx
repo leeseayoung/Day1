@@ -99,7 +99,7 @@ const Mypage = () => {
     }));
     alert("닉네임이 변경 되었습니다");
     setNickname("");
-    setIsEditingNickname(false); // Hide the input field after saving
+    setIsEditingNickname(false);
   };
 
   const toggleNicknameEdit = () => {
@@ -119,7 +119,6 @@ const Mypage = () => {
         />
         <Button onClick={onUploadImageButtonClick}>저장하기</Button>
       </>
-
       <UserInfo>
         닉네임: {userData.nickname}
         {isEditingNickname && (
@@ -135,6 +134,14 @@ const Mypage = () => {
           <Button onClick={toggleNicknameEdit}>닉네임 변경</Button>
         )}
       </UserInfo>
+      <button
+        type="button"
+        onClick={() => {
+          throw new Error("Sentry Test Error");
+        }}
+      >
+        Break the world
+      </button>
     </Container>
   );
 };
