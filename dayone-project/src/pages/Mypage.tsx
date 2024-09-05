@@ -46,6 +46,8 @@ const Mypage = () => {
 
   const [imgFile, setImgFile] = useState<File | null>(null);
   const [nickname, setNickname] = useState("");
+  const [isEditingNickname, setIsEditingNickname] = useState(false);
+
   useEffect(() => {
     const fetchUser = async () => {
       const user = await getUser();
@@ -97,6 +99,11 @@ const Mypage = () => {
     }));
     alert("닉네임이 변경 되었습니다");
     setNickname("");
+    setIsEditingNickname(false); // Hide the input field after saving
+  };
+
+  const toggleNicknameEdit = () => {
+    setIsEditingNickname((prev) => !prev);
   };
 
   return (
@@ -115,8 +122,18 @@ const Mypage = () => {
 
       <UserInfo>
         닉네임: {userData.nickname}
-        <input value={nickname} onChange={(e) => setNickname(e.target.value)} />
-        <Button onClick={nicknameChange}>버튼</Button>
+        {isEditingNickname && (
+          <>
+            <input
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+            />
+            <Button onClick={nicknameChange}>저장하기</Button>
+          </>
+        )}
+        {!isEditingNickname && (
+          <Button onClick={toggleNicknameEdit}>닉네임 변경</Button>
+        )}
       </UserInfo>
     </Container>
   );
