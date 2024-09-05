@@ -36,26 +36,26 @@ export const register = async ({
   return result.data;
 };
 
+const accessToken = localStorage.getItem("access");
+const parsedToken = accessToken ? JSON.parse(accessToken) : null;
 export const getUser = async () => {
-  const user = JSON.parse(localStorage.getItem("access"));
   const result = await axios.get(`https://moneyfulpublicpolicy.co.kr/user`, {
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${user.accessToken}`,
+      Authorization: `Bearer ${parsedToken.accessToken}`,
     },
   });
   return result.data;
 };
 
-export const profileChange = async ({ formData }) => {
-  const user = JSON.parse(localStorage.getItem("access"));
+export const profileChange = async ({ formData }: { formData: FormData }) => {
   const result = await axios.patch(
     `https://moneyfulpublicpolicy.co.kr/profile`,
     formData,
     {
       headers: {
         "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${user.accessToken}`,
+        Authorization: `Bearer ${parsedToken.accessToken}`,
       },
     }
   );

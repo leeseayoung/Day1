@@ -78,7 +78,6 @@ const Mypage = () => {
       ...prevData,
       avatar: image.avatar,
     }));
-    console.log(image);
 
     alert("프로필 이미지가 변경 되었습니다");
   };
@@ -88,7 +87,7 @@ const Mypage = () => {
       alert("닉네임을 입력해주세요");
       return;
     }
-    const formData = new FormData();
+    const formData: FormData = new FormData();
     formData.append("nickname", nickname);
     const userNickname = await profileChange({ formData });
 
