@@ -43,8 +43,9 @@ const Mypage = () => {
     nickname: "",
     avatar: "",
   });
-  const [imgFile, setImgFile] = useState<File | null>(null);
 
+  const [imgFile, setImgFile] = useState<File | null>(null);
+  const [nickname, setNickname] = useState("");
   useEffect(() => {
     const fetchUser = async () => {
       const user = await getUser();
@@ -82,6 +83,23 @@ const Mypage = () => {
     alert("프로필 이미지가 변경 되었습니다");
   };
 
+  const nicknameChange = async () => {
+    if (!nickname) {
+      alert("닉네임을 입력해주세요");
+      return;
+    }
+    const formData = new FormData();
+    formData.append("nickname", nickname);
+    const userNickname = await profileChange({ formData });
+
+    setUserData((prevData) => ({
+      ...prevData,
+      nickname: userNickname.nickname,
+    }));
+    alert("닉네임이 변경 되었습니다");
+    setNickname("");
+  };
+
   return (
     <Container>
       <UserInfo>아이디: {userData.id}</UserInfo>
@@ -98,7 +116,8 @@ const Mypage = () => {
 
       <UserInfo>
         닉네임: {userData.nickname}
-        <Button>버튼</Button>
+        <input value={nickname} onChange={(e) => setNickname(e.target.value)} />
+        <Button onClick={nicknameChange}>버튼</Button>
       </UserInfo>
     </Container>
   );
