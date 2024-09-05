@@ -46,3 +46,18 @@ export const getUser = async () => {
   });
   return result.data;
 };
+
+export const profileChange = async ({ formData }) => {
+  const user = JSON.parse(localStorage.getItem("access"));
+  const result = await axios.patch(
+    `https://moneyfulpublicpolicy.co.kr/profile`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    }
+  );
+  return result.data;
+};
