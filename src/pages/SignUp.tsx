@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import { Wrapper, Title, Inputs, Input } from "../components/Common";
 import { register } from "../apis/login";
+import Button from "../components/Button";
 
 const SignUp = () => {
   const [id, setId] = useState("");
@@ -51,16 +52,13 @@ const SignUp = () => {
       alert("닉네임을 입력하세요.");
       return;
     }
-    const registerData = await register({ id, password, nickname });
+    await register({ id, password, nickname });
     alert("회원가입이 완료되었습니다!");
-    console.log(registerData);
-    console.log("Form submitted with data:", { id, password, nickname });
   };
 
   return (
     <Wrapper>
       <Title>회원가입</Title>
-
       <Inputs>
         <Input placeholder="아이디" value={id} onChange={onChangeId} />
         <Input
@@ -82,17 +80,13 @@ const SignUp = () => {
           onChange={onChangeNickname}
         />
       </Inputs>
-      <Button type="button" onClick={handleSubmit}>
-        회원가입
-      </Button>
+      <CustomButton onClick={handleSubmit}>회원가입</CustomButton>
     </Wrapper>
   );
 };
 
-const Button = styled.button`
+const CustomButton = styled(Button)`
   background-color: black;
-  cursor: pointer;
-  color: white;
   padding: 20px;
   border-radius: 10px;
   margin-top: 20px;

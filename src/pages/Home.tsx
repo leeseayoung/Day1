@@ -3,10 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { login } from "../apis/login";
 import { Form, Title, Wrapper, Inputs, Input } from "../components/Common";
+import Button from "../components/Button";
 
 const Home = () => {
   const [id, setId] = useState("");
-  const [passwrod, setPassword] = useState("");
+  const [password, setPassword] = useState("");
   const router = useNavigate();
   const onChangeId = (e: React.ChangeEvent<HTMLInputElement>) => {
     setId(e.target.value);
@@ -17,7 +18,7 @@ const Home = () => {
 
   // 로그인 기능
   const onClick = async () => {
-    const result = await login(id, passwrod);
+    const result = await login(id, password);
     localStorage.setItem("access", JSON.stringify(result));
     router("/mypage");
   };
@@ -31,23 +32,23 @@ const Home = () => {
           <Input
             placeholder="비밀번호"
             type="password"
-            value={passwrod}
+            value={password}
             onChange={onChangePw}
           />
         </Inputs>
-        <Button onClick={onClick}>Login</Button>
+        <CustomButton onClick={onClick}>Login</CustomButton>
       </Form>
       <CustomLink to="/signup">회원가입하기</CustomLink>
     </Wrapper>
   );
 };
 
-const Button = styled.button`
+const CustomButton = styled(Button)`
   background-color: black;
-  color: white;
   padding: 20px;
   border-radius: 10px;
 `;
+
 const CustomLink = styled(Link)`
   margin-top: 20px;
   color: black;

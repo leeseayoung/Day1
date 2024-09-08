@@ -1,41 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getUser, profileChange } from "../apis/login";
 import styled from "styled-components";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-`;
-
-const UserInfo = styled.div`
-  margin: 10px 0;
-  font-size: 1.2em;
-  color: #333;
-`;
-
-const Avatar = styled.img`
-  border-radius: 50%;
-  width: 100px;
-  height: 100px;
-  margin: 10px 0;
-`;
-
-const Button = styled.button`
-  margin-left: 10px;
-  padding: 5px 10px;
-  font-size: 1em;
-  color: white;
-  background-color: #007bff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
+import Button from "../components/Button";
 
 const Mypage = () => {
   const [userData, setUserData] = useState({
@@ -47,14 +13,6 @@ const Mypage = () => {
   const [imgFile, setImgFile] = useState<File | null>(null);
   const [nickname, setNickname] = useState("");
   const [isEditingNickname, setIsEditingNickname] = useState(false);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const user = await getUser();
-      setUserData(user);
-    };
-    fetchUser();
-  }, []);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -106,6 +64,14 @@ const Mypage = () => {
     setIsEditingNickname((prev) => !prev);
   };
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = await getUser();
+      setUserData(user);
+    };
+    fetchUser();
+  }, []);
+
   return (
     <Container>
       <UserInfo>아이디: {userData.id}</UserInfo>
@@ -117,7 +83,7 @@ const Mypage = () => {
           ref={inputRef}
           onChange={onUploadImage}
         />
-        <Button onClick={onUploadImageButtonClick}>저장하기</Button>
+        <CustomButton onClick={onUploadImageButtonClick}>저장하기</CustomButton>
       </>
       <UserInfo>
         닉네임: {userData.nickname}
@@ -127,23 +93,48 @@ const Mypage = () => {
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
             />
-            <Button onClick={nicknameChange}>저장하기</Button>
+            <CustomButton onClick={nicknameChange}>저장하기</CustomButton>
           </>
         )}
         {!isEditingNickname && (
-          <Button onClick={toggleNicknameEdit}>닉네임 변경</Button>
+          <CustomButton onClick={toggleNicknameEdit}>닉네임 변경</CustomButton>
         )}
       </UserInfo>
-      <button
-        type="button"
-        onClick={() => {
-          throw new Error("Sentry Test Error");
-        }}
-      >
-        Break the world
-      </button>
     </Container>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+`;
+
+const UserInfo = styled.div`
+  margin: 10px 0;
+  font-size: 1.2em;
+  color: #333;
+`;
+
+const Avatar = styled.img`
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  margin: 10px 0;
+`;
+
+const CustomButton = styled(Button)`
+  margin-left: 10px;
+  padding: 5px 10px;
+  font-size: 1em;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
 
 export default Mypage;
